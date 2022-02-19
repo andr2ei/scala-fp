@@ -221,8 +221,30 @@ object List {
   }
 
   // exercise 3.23
-  def zipWith[A](as: List[A], bs: List[A]) = {
-    // todo
+  def zipWith[A, B](as: List[A], bs: List[B]): List[(A, B)] = {
+    (as, bs) match {
+      case (Nil, Nil) => Nil
+      case (Cons(x: A, xs: List[A]), Cons(y: B, ys: List[B])) => Cons((x, y), zipWith(xs, ys): List[(A, B)])
+    }
+  }
+
+  // exercise 3.24
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
+    sup match {
+      case Nil => false
+      case Cons(head1, tail1) =>
+        val res = sub match {
+          case Nil => true
+          case Cons(head2, tail2) =>
+            if (head1 == head2) {
+              hasSubsequence(tail1, tail2)
+            } else {
+              false
+            }
+        }
+        if (!res) hasSubsequence(tail1, sub)
+        else true
+    }
   }
 }
 
@@ -295,4 +317,13 @@ object ListTest extends App {
   val l16 = List(0, 2, 3, 4, 1)
   println("exercise 3.21")
   println(List.filter(l16)(_ % 2 == 1))
+
+  // exercise 3.23
+  println("exercise 3.23")
+  println(List.zipWith(List(1, 2, 3), List(4, 5, 6)))
+
+  // exercise 3.24
+  println("exercise 3.24")
+  println(List.hasSubsequence(List(1,2,3,4), List(2,3)))
+  println(List.hasSubsequence(List(1,2,3,4), List(2,5)))
 }
